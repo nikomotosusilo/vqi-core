@@ -1,43 +1,61 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V26.1 GLOBAL TRACKER - VQI</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:580px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:10px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:12px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.log{background:#000;border:1px solid #222;border-radius:12px;padding:10px;margin-top:10px;font-size:10px;color:#0f0;min-height:140px;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.stat{background:#111;border:1px solid #333;border-radius:12px;padding:8px;text-align:center;font-size:10px}.stat b{display:block;color:#00ff88;font-size:16px}.hist{margin-top:8px;border-top:1px dashed #333;padding-top:8px;font-size:9px;color:#aaa;max-height:120px;overflow:auto}</style></head><body>
-<div class=card><h2 style="text-align:center">⛏️ TIKET CHAIN<br>V26.1 GLOBAL</h2><div style="text-align:center;font-size:9px;color:#888">REAL PoW VARIABLE • GLOBAL TRACKER • 282 BLOCKS</div>
-<div class=box>Ledger: vqi_chain.dat | Height <b id="hh">282</b> | Balance <b id="bal" style="color:#00ff88">0 VQI</b><br><span id="loc" style="font-size:13px">📍 Detecting...</span><br><span id="ip" style="font-size:9px;color:#888">IP: ...</span> | <span id="isp" style="font-size:9px;color:#888"></span></div>
-<button id="mineBtn" class="btn btn-g">⛏️ START REAL PoW VARIABLE - TAP!</button>
-<div class=box>Nonce: <b id="nonce">0</b> | <span id="hs">0 H/s</span> | Time: <b id="tm">00:00</b><br><div id="curHash" style="font-size:7px;color:#888;word-break:break-all">SHA-256: -</div></div>
-<div class=stats><div class=stat>👁️ Global Visits<b id="vc">0</b></div><div class=stat>⛏️ Total Mine<b id="ins">0</b></div><div class=stat>🌍 Countries<b id="cc">0</b></div></div>
-<div id="log" class=log>🌍 Initializing Global Tracker...
-Support: ID, SG, MY, US, JP, EU, All Countries
-</div><div id="hist" class=hist></div></div>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V27 10MIN DAILY - VQI</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:580px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:10px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:12px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.btn-off{background:#333;color:#888}.log{background:#000;border:1px solid #222;border-radius:12px;padding:10px;font-size:10px;color:#0f0;min-height:140px;white-space:pre-wrap;max-height:250px;overflow:auto}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.stat{background:#111;border:1px solid #333;border-radius:12px;padding:8px;text-align:center;font-size:10px}.stat b{display:block;color:#00ff88;font-size:14px}.bar{height:8px;background:#222;border-radius:10px;overflow:hidden;margin:6px 0}.fill{height:100%;background:#00ff88;width:0%;transition:width 0.5s}</style></head><body>
+<div class=card><h2 style="text-align:center">⛏️ TIKET CHAIN<br>V27 10MIN/DAY</h2><div style="text-align:center;font-size:9px;color:#888">REAL PoW VARIABLE • DAILY LIMIT • 282 BLOCKS</div>
+<div class=box>Height <b id="hh">283</b> | Balance <b id="bal" style="color:#00ff88">5 VQI</b><br><span id="loc">📍 Bekasi • Indonesia</span><br><div style="margin-top:8px">Sisa Hari Ini: <b id="rem" style="color:#00ff88">10:00</b></div><div class=bar><div id="fill" class=fill></div></div><div style="font-size:9px;color:#888">Limit 10 menit / hari / user - Fair Mining</div></div>
+<button id="mineBtn" class="btn btn-g">⛏️ START MINING (10 MENIT/HARI)</button>
+<div class=box>Nonce: <b id="nonce">83487</b> | <span id="hs">4691 H/s</span> | Sesi: <b id="tm">00:00</b><br><div id="curHash" style="font-size:7px;color:#888">SHA-256: 0000d956...</div></div>
+<div class=stats><div class=stat>👁️ Visits<b id="vc">1</b></div><div class=stat>⛏️ Mined Today<b id="mt">0</b></div><div class=stat>⏳ Used<b id="used">00:00</b></div></div>
+<div id="log" class=log>✅ V27 10MIN DAILY AKTIF
+Aturan: Tiap user cuma 10 menit/hari
+Tujuannya biar gak boros baterai & fair
+Tap START, otomatis stop kalau 10 menit habis
+Reset jam 00:00 WIB
+</div></div>
 <script>
-let H=282,prev='00003911a7f2c9e1b8d5',nonce=0,mining=false,startT=0,blocks=parseInt(localStorage.getItem('b')||'0');const S=id=>document.getElementById(id);
-S('bf' in window? 'bal':'bal').textContent=blocks+' VQI';S('hh').textContent=H;
-function flag(cc){if(!cc||cc.length!=2)return '🏳️';return String.fromCodePoint(...[...cc.toUpperCase()].map(c=>127397+c.charCodeAt(0)));}
-async function tracker(){
-  let visits=parseInt(localStorage.getItem('v_real')||'0')+1;localStorage.setItem('v_real',visits);S('vc').textContent=visits;
-  let ins=parseInt(localStorage.getItem('ins_real')||'0');S('ins').textContent=ins;
-  let hist=JSON.parse(localStorage.getItem('city_hist')||'[]');
-  let uniq=new Set(hist.map(h=>h.cc));S('cc').textContent=uniq.size||1;
-  try{
-    let r=await fetch('https://ipapi.co/json/');let j=await r.json();
-    let f=flag(j.country_code);
-    S('loc').innerHTML=f+' '+j.city+', '+j.region+' • '+j.country_name;
-    S('ip').textContent='IP: '+j.ip;S('isp').textContent=j.org;
-    S('log').innerText='✅ GLOBAL VISITOR DETECTED\n'+f+' '+j.city+', '+j.country_name+' ('+j.country_code+')\nIP: '+j.ip+'\nISP: '+j.org+'\nTimezone: '+j.timezone+'\nVisit ke: '+visits+'\nBisa tracking sampai luar negeri!\n\n'+S('log').innerText;
-    hist.push({city:j.city,country:j.country_name,cc:j.country_code,flag:f,ip:j.ip,time:new Date().toLocaleString()});localStorage.setItem('city_hist',JSON.stringify(hist.slice(-100)));
-  }catch(e){
-    S('loc').textContent='📍 Bekasi • Indonesia (offline)';S('ip').textContent='IP: local';S('log').innerText='⚠️ Offline - pakai lokal: '+visits+' visits\nTetap support luar negeri kalau online\n\n'+S('log').innerText;
-  }
-  renderHist();
-}
-function renderHist(){let hist=JSON.parse(localStorage.getItem('city_hist')||'[]');let el=S('hist');if(!hist.length){el.innerHTML='History 70 tes lu akan muncul disini...';return;}el.innerHTML='<b>📜 70 Test Terakhir (Global):</b><br>'+hist.slice(-20).reverse().map(h=>h.flag+' '+h.city+' '+h.country+' - '+h.time).join('<br>');let uniq=new Set(hist.map(h=>h.cc));S('cc').textContent=uniq.size;}
-tracker();
+let H=283,prev='0000d9568e9bc9b2ed35250b64faf07ecf67df04130a',nonce=83487,mining=false,startT=0,blocks=5,totalToday=0;
+const S=id=>document.getElementById(id);
+const DAILY_LIMIT=600; // 10 menit = 600 detik
+function getTodayKey(){let d=new Date();return 'mine_'+d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();}
+function loadDaily(){let k=getTodayKey();let data=JSON.parse(localStorage.getItem(k)||'{"used":0,"blocks":0}');return data;}
+function saveDaily(used,blocksToday){let k=getTodayKey();localStorage.setItem(k,JSON.stringify({used,blocks:blocksToday}));}
+let daily=loadDaily();
+S('used').textContent=String(Math.floor(daily.used/60)).padStart(2,'0')+':'+String(daily.used%60).padStart(2,'0');
+S('mt').textContent=daily.blocks;
+S('rem').textContent=String(Math.floor((DAILY_LIMIT-daily.used)/60)).padStart(2,'0')+':'+String((DAILY_LIMIT-daily.used)%60).padStart(2,'0');
+S('fill').style.width=(daily.used/DAILY_LIMIT*100)+'%';
+blocks=parseInt(localStorage.getItem('b')||'5');S('bal').textContent=blocks+' VQI';S('hh').textContent=H;
+
 async function sha(m){let b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+
 async function mine(){
-  if(mining)return;mining=true;nonce=0;startT=Date.now();S('mineBtn').textContent='⛏️ MINING REAL...';let ins=parseInt(localStorage.getItem('ins_real')||'0')+1;localStorage.setItem('ins_real',ins);S('ins').textContent=ins;
-  let last=Date.now(),c=0,hps=0;
-  while(true){nonce++;c++;let h=await sha('VQI_'+H+'_'+nonce+'_'+prev);S('nonce').textContent=nonce;S('curHash').textContent='SHA-256: '+h;
-    if(nonce%40==0){let now=Date.now(),dt=(now-last)/1000;if(dt>0.5){hps=Math.floor(c/dt);S('hs').textContent=hps+' H/s';last=now;c=0;}let el=Math.floor((now-startT)/1000);S('tm').textContent=String(Math.floor(el/60)).padStart(2,'0')+':'+String(el%60).padStart(2,'0');await new Promise(r=>setTimeout(r,0));}
-    if(h.startsWith('0000')){blocks++;localStorage.setItem('b',blocks);S('bal').textContent=blocks+' VQI';S('log').innerText='🎉 BLOCK '+(H+1)+' FOUND! '+flag('ID')+'\nHash: '+h+'\nNonce: '+nonce+'\nTime VARIABLE: '+Math.floor((Date.now()-startT)/1000)+'s\nProof Global Valid!\n\n'+S('log').innerText;S('mineBtn').textContent='✅ BLOCK FOUND!';mining=false;prev=h;H++;S('hh').textContent=H;break;}
+  daily=loadDaily();
+  if(daily.used>=DAILY_LIMIT){S('log').innerText='⏰ LIMIT 10 MENIT HARI INI HABIS!\nBesok jam 00:00 WIB reset lagi\nBalance tetap aman: '+blocks+' VQI\n\n'+S('log').innerText;S('mineBtn').className='btn btn-off';S('mineBtn').textContent='⏰ HABIS - BESOK LAGI';return;}
+  if(mining)return;mining=true;startT=Date.now();let sessionSec=0;
+  S('mineBtn').textContent='⏸️ STOP MINING (SISA '+S('rem').textContent+')';
+  S('log').innerText='⛏️ START - Sisa '+ (DAILY_LIMIT-daily.used) +' detik hari ini\nCari hash 0000... VARIABLE\n\n'+S('log').innerText;
+  let last=Date.now(),c=0;
+  while(mining){
+    // cek limit
+    let elapsed=Math.floor((Date.now()-startT)/1000);
+    if(daily.used+elapsed>=DAILY_LIMIT){S('log').innerText='⏰ 10 MENIT HABIS! Auto Stop\nBesok lanjut lagi\nBlock terakhir: '+H+'\n\n'+S('log').innerText;break;}
+    nonce++;c++;let h=await sha('VQI_'+H+'_'+nonce+'_'+prev);S('nonce').textContent=nonce;S('curHash').textContent='SHA-256: '+h;
+    if(nonce%40==0){
+      let now=Date.now(),dt=(now-last)/1000;
+      if(dt>0.5){S('hs').textContent=Math.floor(c/dt)+' H/s';last=now;c=0;}
+      S('tm').textContent=String(Math.floor(elapsed/60)).padStart(2,'0')+':'+String(elapsed%60).padStart(2,'0');
+      let totalUsed=daily.used+elapsed;S('used').textContent=String(Math.floor(totalUsed/60)).padStart(2,'0')+':'+String(totalUsed%60).padStart(2,'0');
+      S('rem').textContent=String(Math.floor((DAILY_LIMIT-totalUsed)/60)).padStart(2,'0')+':'+String((DAILY_LIMIT-totalUsed)%60).padStart(2,'0');
+      S('fill').style.width=(totalUsed/DAILY_LIMIT*100)+'%';
+      await new Promise(r=>setTimeout(r,0));
+    }
+    if(h.startsWith('0000')){blocks++;localStorage.setItem('b',blocks);S('bal').textContent=blocks+' VQI';daily.blocks++;S('mt').textContent=daily.blocks;S('log').innerText='🎉 BLOCK '+(H+1)+' FOUND! Time '+(Date.now()-startT)/1000+'s\nHash: '+h+'\nNonce: '+nonce+'\n'+S('log').innerText;prev=h;H++;S('hh').textContent=H;}
   }
+  // save sisa waktu
+  let finalEl=Math.floor((Date.now()-startT)/1000);daily.used+=finalEl;daily.used=Math.min(daily.used,DAILY_LIMIT);saveDaily(daily.used,daily.blocks);
+  mining=false;S('mineBtn').className=daily.used>=DAILY_LIMIT?'btn btn-off':'btn btn-g';S('mineBtn').textContent=daily.used>=DAILY_LIMIT?'⏰ HABIS HARI INI (10 MENIT)':'⛏️ START MINING (SISA '+S('rem').textContent+')';
 }
-S('mineBtn').onclick=mine;
+
+S('mineBtn').onclick=()=>{if(mining){mining=false;return;}mine();};
+
+// tracker global simple
+let v=parseInt(localStorage.getItem('v_real')||'0')+1;localStorage.setItem('v_real',v);S('vc').textContent=v;
 </script></body></html>
