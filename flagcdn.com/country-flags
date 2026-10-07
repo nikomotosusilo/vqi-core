@@ -1,0 +1,70 @@
+// VQI FLAGS V2 - 195 Negara REAL - flagcdn.com + emoji
+// Source: flagcdn.com + restcountries.com
+
+const COUNTRIES_195 = [
+  {code:"ID", name:"Indonesia", flag:"🇮🇩", currency:"IDR", cdn:"https://flagcdn.com/w40/id.png"},
+  {code:"MY", name:"Malaysia", flag:"🇲🇾", currency:"MYR", cdn:"https://flagcdn.com/w40/my.png"},
+  {code:"SG", name:"Singapore", flag:"🇸🇬", currency:"SGD", cdn:"https://flagcdn.com/w40/sg.png"},
+  {code:"US", name:"United States", flag:"🇺🇸", currency:"USD", cdn:"https://flagcdn.com/w40/us.png"},
+  {code:"GB", name:"United Kingdom", flag:"🇬🇧", currency:"GBP", cdn:"https://flagcdn.com/w40/gb.png"},
+  {code:"JP", name:"Japan", flag:"🇯🇵", currency:"JPY", cdn:"https://flagcdn.com/w40/jp.png"},
+  {code:"CN", name:"China", flag:"🇨🇳", currency:"CNY", cdn:"https://flagcdn.com/w40/cn.png"},
+  {code:"IN", name:"India", flag:"🇮🇳", currency:"INR", cdn:"https://flagcdn.com/w40/in.png"},
+  {code:"KR", name:"South Korea", flag:"🇰🇷", currency:"KRW", cdn:"https://flagcdn.com/w40/kr.png"},
+  {code:"AU", name:"Australia", flag:"🇦🇺", currency:"AUD", cdn:"https://flagcdn.com/w40/au.png"},
+  {code:"DE", name:"Germany", flag:"🇩🇪", currency:"EUR", cdn:"https://flagcdn.com/w40/de.png"},
+  {code:"FR", name:"France", flag:"🇫🇷", currency:"EUR", cdn:"https://flagcdn.com/w40/fr.png"},
+  {code:"BR", name:"Brazil", flag:"🇧🇷", currency:"BRL", cdn:"https://flagcdn.com/w40/br.png"},
+  {code:"RU", name:"Russia", flag:"🇷🇺", currency:"RUB", cdn:"https://flagcdn.com/w40/ru.png"},
+  {code:"SA", name:"Saudi Arabia", flag:"🇸🇦", currency:"SAR", cdn:"https://flagcdn.com/w40/sa.png"},
+  {code:"AE", name:"United Arab Emirates", flag:"🇦🇪", currency:"AED", cdn:"https://flagcdn.com/w40/ae.png"},
+  // 180 negara lain auto-load dari API di bawah, ini 15 sample biar file gak berat
+];
+
+// FULL 195 AUTO FETCH dari flagcdn + restcountries (biar gak tulis manual 195)
+async function loadAll195Flags(){
+  try {
+    let res = await fetch('https://restcountries.com/v3.1/all?fields=cca2,name,currencies,flags');
+    let data = await res.json();
+    let sorted = data.sort((a,b)=>a.name.common.localeCompare(b.name.common));
+    COUNTRIES_195.length = 0; // clear sample
+    sorted.forEach(c=>{
+      let code = c.cca2;
+      let cur = c.currencies? Object.keys(c.currencies)[0] : "USD";
+      COUNTRIES_195.push({
+        code: code,
+        name: c.name.common,
+        flag: code.toUpperCase().replace(/./g, char => String.fromCodePoint(127397 + char.charCodeAt())),
+        currency: cur,
+        cdn: `https://flagcdn.com/w40/${code.toLowerCase()}.png`
+      });
+    });
+    console.log("195 Flags loaded:", COUNTRIES_195.length);
+    renderFlagSelect();
+  } catch(e){
+    console.log("Fallback ke sample 15 negara, API restcountries error", e);
+    renderFlagSelect();
+  }
+}
+
+function renderFlagSelect(){
+  let sel = document.getElementById('country');
+  if(!sel) return;
+  sel.innerHTML = COUNTRIES_195.map(c=>
+    `<option value="${c.code}" data-cdn="${c.cdn}">${c.flag} ${c.name} - ${c.currency}</option>`
+  ).join('');
+
+  // preview flag image
+  sel.addEventListener('change', (e)=>{
+    let opt = e.target.selectedOptions[0];
+    let cdn = opt.getAttribute('data-cdn');
+    let img = document.getElementById('flag-preview');
+    if(img) img.src = cdn;
+    localStorage.setItem('vqi_country', e.target.value);
+  });
+}
+
+// Panggil saat Sign Up page load
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadAll195Flags();
+});
