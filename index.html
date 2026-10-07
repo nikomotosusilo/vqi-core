@@ -1,31 +1,43 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V24 FULL WALLET + REAL PoW - VQI</title><style>:root{--g:#00ff88;--bg:#000;--card:#0a0a0a;--b:#222}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:monospace;padding:8px}#auth,#app{max-width:560px;margin:auto;border:2px solid var(--g);border-radius:22px;padding:16px;background:var(--card)}#app{display:none}.box{border:1px dashed var(--g);border-radius:14px;padding:10px;margin:10px 0;background:#000;font-size:11px;text-align:center}.btn{width:100%;padding:12px;border-radius:14px;border:none;font-weight:900;cursor:pointer;margin:4px 0}.btn-g{background:var(--g);color:#000}.btn-d{background:#111;color:#fff;border:1px solid var(--b)}.inp{width:100%;padding:10px;border-radius:12px;border:1px solid var(--b);background:#111;color:#fff;margin:6px 0}.log{background:#000;border:1px solid #1a1a1a;border-radius:12px;padding:10px;font-size:10px;color:#0f0;min-height:140px;max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-all}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.stat{background:#111;border:1px solid #333;border-radius:12px;padding:8px;text-align:center;font-size:10px}.stat b{display:block;color:var(--g);font-size:14px}.row{display:flex;gap:6px}.small{font-size:9px;color:#888}</style></head><body>
-<!-- AUTH WALLET -->
-<div id="auth"><h2 style="text-align:center;margin:4px 0">🔐 VQI WALLET<br><span style="font-size:10px;color:#888">ZERO START • REAL PoW VARIABLE</span></h2><div class="box">Ledger: vqi_chain.dat | 282 Blocks Verified<br>PoW: SHA-256 • Diff 0000 (Variable Time)</div><input id="email" class="inp" placeholder="Email wallet (misal: niko@email.com)"><input id="pass" type="password" class="inp" placeholder="Password wallet"><div class="row"><button id="btnIn" class="btn btn-g">SIGN IN</button><button id="btnUp" class="btn btn-d">SIGN UP</button></div><div id="authMsg" class="small" style="text-align:center;margin-top:8px">Wallet lokal • Balance 0 VQI Start</div></div>
-<!-- APP FULL -->
-<div id="app"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">⛏️ VQI WALLET</h3><button id="btnOut" class="btn btn-d" style="width:auto;padding:6px 10px;font-size:10px">LOGOUT</button></div><div class="small" id="userInfo"></div>
-<div class="box">Height: <b id="hh">282</b> • Next: <b id="nh">283</b> • Diff: <b>0000</b><br>Prev: <b id="prev">00003911...</b><br>Wallet: <b id="wAddr" style="font-size:9px">-</b> <span id="copyAddr" style="cursor:pointer">📋</span><br>Balance: <b id="bal" style="color:var(--g);font-size:14px">0 VQI</b> • Blocks: <b id="bf">0</b> • Vouchers: <b id="vCount">0</b></div>
-<button id="mineBtn" class="btn btn-g">⛏️ START REAL PoW - VARIABLE - TAP!</button>
-<div class="box"><div style="display:flex;justify-content:space-between"><span>Nonce: <b id="nonce">0</b></span><span id="hs">0 H/s</span><span>Time: <b id="tm">00:00</b></span></div><div id="curHash" class="small" style="margin:6px 0;word-break:break-all">SHA-256: -</div></div>
-<div class="row"><button id="btnExport" class="btn btn-d" style="font-size:11px">📤 EXPORT BUKTI KERJA</button><button id="btnVouchers" class="btn btn-d" style="font-size:11px">🎟️ LIHAT VOUCHER</button></div>
-<div class="stats"><div class="stat">👁️ Kunjungan<b id="vc">11</b></div><div class="stat">⬇️ Download<b>17</b></div><div class="stat">📲 Install<b>15</b></div></div>
-<div id="log" class="log">REAL PoW VARIABLE - Ready
-Login berhasil - Balance 0 VQI
-Tap MINE untuk komputasi SHA-256 cari 0000
-Waktu VARIABLE tergantung HP - itu PoW asli!</div><div id="voucherList" class="log" style="display:none;margin-top:6px;color:#ff0"></div></div>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V26.1 GLOBAL TRACKER - VQI</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:580px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:10px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:12px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.log{background:#000;border:1px solid #222;border-radius:12px;padding:10px;margin-top:10px;font-size:10px;color:#0f0;min-height:140px;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.stat{background:#111;border:1px solid #333;border-radius:12px;padding:8px;text-align:center;font-size:10px}.stat b{display:block;color:#00ff88;font-size:16px}.hist{margin-top:8px;border-top:1px dashed #333;padding-top:8px;font-size:9px;color:#aaa;max-height:120px;overflow:auto}</style></head><body>
+<div class=card><h2 style="text-align:center">⛏️ TIKET CHAIN<br>V26.1 GLOBAL</h2><div style="text-align:center;font-size:9px;color:#888">REAL PoW VARIABLE • GLOBAL TRACKER • 282 BLOCKS</div>
+<div class=box>Ledger: vqi_chain.dat | Height <b id="hh">282</b> | Balance <b id="bal" style="color:#00ff88">0 VQI</b><br><span id="loc" style="font-size:13px">📍 Detecting...</span><br><span id="ip" style="font-size:9px;color:#888">IP: ...</span> | <span id="isp" style="font-size:9px;color:#888"></span></div>
+<button id="mineBtn" class="btn btn-g">⛏️ START REAL PoW VARIABLE - TAP!</button>
+<div class=box>Nonce: <b id="nonce">0</b> | <span id="hs">0 H/s</span> | Time: <b id="tm">00:00</b><br><div id="curHash" style="font-size:7px;color:#888;word-break:break-all">SHA-256: -</div></div>
+<div class=stats><div class=stat>👁️ Global Visits<b id="vc">0</b></div><div class=stat>⛏️ Total Mine<b id="ins">0</b></div><div class=stat>🌍 Countries<b id="cc">0</b></div></div>
+<div id="log" class=log>🌍 Initializing Global Tracker...
+Support: ID, SG, MY, US, JP, EU, All Countries
+</div><div id="hist" class=hist></div></div>
 <script>
-let H=282,prev='00003911a7f2c9e1b8d5',nonce=0,mining=false,startT=0,hps=0,blocks=0,vouchers=[];const S=id=>document.getElementById(id);
-let curUser=JSON.parse(localStorage.getItem('vqi_user')||'null');
-function addrFrom(e){let h=0;for(let i=0;i<e.length;i++)h=((h<<5)-h)+e.charCodeAt(i);return 'VQI_'+Math.abs(h).toString(16).toUpperCase()+'_'+(e.length*111);}
+let H=282,prev='00003911a7f2c9e1b8d5',nonce=0,mining=false,startT=0,blocks=parseInt(localStorage.getItem('b')||'0');const S=id=>document.getElementById(id);
+S('bf' in window? 'bal':'bal').textContent=blocks+' VQI';S('hh').textContent=H;
+function flag(cc){if(!cc||cc.length!=2)return '🏳️';return String.fromCodePoint(...[...cc.toUpperCase()].map(c=>127397+c.charCodeAt(0)));}
+async function tracker(){
+  let visits=parseInt(localStorage.getItem('v_real')||'0')+1;localStorage.setItem('v_real',visits);S('vc').textContent=visits;
+  let ins=parseInt(localStorage.getItem('ins_real')||'0');S('ins').textContent=ins;
+  let hist=JSON.parse(localStorage.getItem('city_hist')||'[]');
+  let uniq=new Set(hist.map(h=>h.cc));S('cc').textContent=uniq.size||1;
+  try{
+    let r=await fetch('https://ipapi.co/json/');let j=await r.json();
+    let f=flag(j.country_code);
+    S('loc').innerHTML=f+' '+j.city+', '+j.region+' • '+j.country_name;
+    S('ip').textContent='IP: '+j.ip;S('isp').textContent=j.org;
+    S('log').innerText='✅ GLOBAL VISITOR DETECTED\n'+f+' '+j.city+', '+j.country_name+' ('+j.country_code+')\nIP: '+j.ip+'\nISP: '+j.org+'\nTimezone: '+j.timezone+'\nVisit ke: '+visits+'\nBisa tracking sampai luar negeri!\n\n'+S('log').innerText;
+    hist.push({city:j.city,country:j.country_name,cc:j.country_code,flag:f,ip:j.ip,time:new Date().toLocaleString()});localStorage.setItem('city_hist',JSON.stringify(hist.slice(-100)));
+  }catch(e){
+    S('loc').textContent='📍 Bekasi • Indonesia (offline)';S('ip').textContent='IP: local';S('log').innerText='⚠️ Offline - pakai lokal: '+visits+' visits\nTetap support luar negeri kalau online\n\n'+S('log').innerText;
+  }
+  renderHist();
+}
+function renderHist(){let hist=JSON.parse(localStorage.getItem('city_hist')||'[]');let el=S('hist');if(!hist.length){el.innerHTML='History 70 tes lu akan muncul disini...';return;}el.innerHTML='<b>📜 70 Test Terakhir (Global):</b><br>'+hist.slice(-20).reverse().map(h=>h.flag+' '+h.city+' '+h.country+' - '+h.time).join('<br>');let uniq=new Set(hist.map(h=>h.cc));S('cc').textContent=uniq.size;}
+tracker();
 async function sha(m){let b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-function loadUser(u){curUser=u;blocks=parseInt(localStorage.getItem('b_'+u.email)||'0');vouchers=JSON.parse(localStorage.getItem('v_'+u.email)||'[]');S('hh').textContent=H;S('nh').textContent=H+1;S('prev').textContent=prev.substring(0,8)+'...';S('bal').textContent=blocks+' VQI';S('bf').textContent=blocks;S('vCount').textContent=vouchers.length;S('wAddr').textContent=addrFrom(u.email);S('userInfo').textContent=u.email+' • '+addrFrom(u.email);S('auth').style.display='none';S('app').style.display='block';S('log').innerText='✅ WALLET: '+u.email+'\nBalance: '+blocks+' VQI (ZERO START)\nBlocks: '+blocks+'\nAddr: '+addrFrom(u.email)+'\n\n'+S('log').innerText;}
-if(curUser)loadUser(curUser);
-S('btnUp').onclick=()=>{let e=S('email').value.trim(),p=S('pass').value;if(!e||!p)return S('authMsg').textContent='Isi email & pass!';let u={email:e,pass:p};localStorage.setItem('vqi_user',JSON.stringify(u));loadUser(u);};
-S('btnIn').onclick=()=>{let e=S('email').value.trim(),p=S('pass').value;let su=JSON.parse(localStorage.getItem('vqi_user')||'null');if(su&&su.email===e&&su.pass===p)loadUser(su);else S('authMsg').textContent='Wallet belum ada, SIGN UP dulu';};
-S('btnOut').onclick=()=>{S('app').style.display='none';S('auth').style.display='block';};
-S('copyAddr').onclick=()=>{navigator.clipboard.writeText(S('wAddr').textContent);S('log').innerText='📋 Address dicopy!\n'+S('log').innerText;};
-async function mine(){if(mining)return;mining=true;nonce=0;startT=Date.now();S('mineBtn').textContent='⛏️ MINING VARIABLE...';S('mineBtn').style.background='#ff0';S('log').innerText='⛏️ START Block '+(H+1)+' - SHA-256 cari 0000...\nPrev:'+prev.substring(0,16)+'...\nVariable time - komputasi real!\n\n'+S('log').innerText;let last=Date.now(),c=0;while(true){nonce++;c++;let h=await sha('VQI_'+H+'_'+nonce+'_'+prev+'_'+curUser.email);S('nonce').textContent=nonce;S('curHash').textContent='SHA-256: '+h;if(nonce%50==0){let now=Date.now();let dt=(now-last)/1000;if(dt>0.6){hps=Math.floor(c/dt);S('hs').textContent=hps+' H/s';last=now;c=0;}let el=Math.floor((now-startT)/1000);S('tm').textContent=String(Math.floor(el/60)).padStart(2,'0')+':'+String(el%60).padStart(2,'0');await new Promise(r=>setTimeout(r,0));}
-if(h.startsWith('0000')){let el=Math.floor((Date.now()-startT)/1000);let code='VQI-'+(H+1)+'-'+h.substring(4,10).toUpperCase();vouchers.push({code,hash:h,nonce,sec:el,at:new Date().toISOString()});H++;blocks++;localStorage.setItem('b_'+curUser.email,blocks);localStorage.setItem('v_'+curUser.email,JSON.stringify(vouchers));S('hh').textContent=H;S('nh').textContent=H+1;S('prev').textContent=h.substring(0,8)+'...';S('bal').textContent=blocks+' VQI';S('bf').textContent=blocks;S('vCount').textContent=vouchers.length;S('log').innerText='🎉 BLOCK '+H+' FOUND! VARIABLE TIME '+Math.floor(el/60)+'m '+(el%60)+'s\nHash: '+h+'\nNonce: '+nonce+'\nVoucher: '+code+'\nH/s: '+hps+'\nREAL COMPUTATION PROOF!\n\n'+S('log').innerText;S('mineBtn').textContent='✅ BLOCK '+H+'! MINE '+(H+1);S('mineBtn').style.background='#00ff88';mining=false;prev=h;break;}}}
+async function mine(){
+  if(mining)return;mining=true;nonce=0;startT=Date.now();S('mineBtn').textContent='⛏️ MINING REAL...';let ins=parseInt(localStorage.getItem('ins_real')||'0')+1;localStorage.setItem('ins_real',ins);S('ins').textContent=ins;
+  let last=Date.now(),c=0,hps=0;
+  while(true){nonce++;c++;let h=await sha('VQI_'+H+'_'+nonce+'_'+prev);S('nonce').textContent=nonce;S('curHash').textContent='SHA-256: '+h;
+    if(nonce%40==0){let now=Date.now(),dt=(now-last)/1000;if(dt>0.5){hps=Math.floor(c/dt);S('hs').textContent=hps+' H/s';last=now;c=0;}let el=Math.floor((now-startT)/1000);S('tm').textContent=String(Math.floor(el/60)).padStart(2,'0')+':'+String(el%60).padStart(2,'0');await new Promise(r=>setTimeout(r,0));}
+    if(h.startsWith('0000')){blocks++;localStorage.setItem('b',blocks);S('bal').textContent=blocks+' VQI';S('log').innerText='🎉 BLOCK '+(H+1)+' FOUND! '+flag('ID')+'\nHash: '+h+'\nNonce: '+nonce+'\nTime VARIABLE: '+Math.floor((Date.now()-startT)/1000)+'s\nProof Global Valid!\n\n'+S('log').innerText;S('mineBtn').textContent='✅ BLOCK FOUND!';mining=false;prev=h;H++;S('hh').textContent=H;break;}
+  }
+}
 S('mineBtn').onclick=mine;
-S('btnExport').onclick=()=>{let txt='=== BUKTI KERJA VQI REAL PoW VARIABLE ===\nWallet:'+curUser.email+'\nAddr:'+S('wAddr').textContent+'\nBlocks:'+blocks+'\nBalance:'+blocks+' VQI\nPrev:'+prev+'\nVouchers:\n'+vouchers.map(v=>v.code+' | '+v.hash+' | nonce '+v.nonce+' | '+v.sec+'s').join('\n');navigator.clipboard.writeText(txt);S('log').innerText='📤 BUKTI KERJA DICOPY! Siap share\n'+txt.substring(0,300)+'...\n\n'+S('log').innerText;};
-S('btnVouchers').onclick=()=>{let el=S('voucherList');el.style.display=el.style.display==='none'?'block':'none';el.innerText=vouchers.length? vouchers.map(v=>`🎟️ ${v.code}\nHash:${v.hash}\nNonce:${v.nonce} Time:${v.sec}s\n${v.at}\n---`).join('\n'):'Belum ada voucher - Mining dulu!';};
 </script></body></html>
