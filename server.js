@@ -64,3 +64,20 @@ app.post('/api/sell', (req,res)=>{
 });
 app.get('/api/balance/:address', (req,res)=>{res.json({balance:chain.balances[req.params.address]||0, assets:chain.assets[req.params.address]||{}});});
 app.listen(3000, ()=>console.log('VQI V3 OK'));
+// ===== MINING REAL - MASUK BLOCKCHAIN =====
+app.post('/api/mine', (req,res)=>{
+  const {address} = req.body;
+  const REWARD = 100000000000 / 34000000; // 2941 VQI per block
+  chain.balances[address] = (chain.balances[address]||0) + REWARD;
+  chain.height += 1;
+  // hash baru biar kayak block beneran
+  chain.prevHash = require('crypto').createHash('sha256').update(chain.prevHash + address + Date.now()).digest('hex').slice(0,56);
+
+  res.json({
+    ok:true,
+    message:`Block #${chain.height} mined! +${REWARD.toFixed(2)} VQI`,
+    newBalance: chain.balances[address],
+    height: chain.height,
+    hash: chain.prevHash
+  });
+});
