@@ -1,44 +1,68 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V29.1 VOUCHERNOMIC - VQI</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:600px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:12px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:14px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.log{background:#000;border:1px solid #222;border-radius:12px;padding:10px;font-size:10px;color:#0f0;min-height:150px;white-space:pre-wrap;word-break:break-all;max-height:350px;overflow:auto}.bar{height:10px;background:#222;border-radius:10px;overflow:hidden;margin:6px 0}.fill{height:100%;background:#00ff88}</style></head><body>
-<div class=card><h2 style="text-align:center">🎟️ TIKET CHAIN<br>V29.1 VOUCHERNOMIC</h2><div style="text-align:center;font-size:9px;color:#00ff88;font-weight:bold">100B VOUCHER / 34M BLOCKS = 2,941 VQI/BLOCK • REAL VOUCHER CHAIN</div>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V30 VQI REAL TIMESTAMP</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:620px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:12px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:14px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.log{background:#000;border:1px solid #333;border-radius:12px;padding:10px;font-size:9px;color:#0f0;min-height:200px;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow:auto;line-height:1.4}.bar{height:10px;background:#222;border-radius:10px;overflow:hidden;margin:6px 0}.fill{height:100%;background:#00ff88}</style></head><body>
+<div class=card>
+<h2 style="text-align:center;margin:4px">⚛️ VOUCHE QUANTUM INTI<br><span style="font-size:18px;color:#00ff88">VQI CHAIN V30</span></h2>
+<div style="text-align:center;font-size:9px;color:#888">Vouchernomic: 100B VQI / 34M Blocks • PoW Variable • Real Timestamp</div>
+
 <div class=box>
-Height <b id="hh">309</b> | Total Voucher <b id="ts">100B</b> | Max Blok <b id="mb">34,000,000</b><br>
-Saldo Voucher: <b id="bal" style="color:#00ff88;font-size:15px">0 VQI</b><br>
-Voucher per Blok: <b style="color:#ff0">2,941.176 VQI</b><br>
+Blok <b id="hh">309</b> / 34,000,000 | Total Voucher: 100B VQI<br>
+Saldo: <b id="bal" style="color:#00ff88;font-size:16px">908,823 VQI</b> | Reward: <b style="color:#ff0">2,941 VQI/Blok</b><br><br>
 Sisa Hari Ini: <b id="rem">10:00</b> <div class=bar><div id="fill" class=fill></div></div>
-<div style="font-size:8px;color:#888">Vouchernomic: Cetak voucher adil via PoW Variable, bukan token gimmick</div>
+<span id="now" style="font-size:9px;color:#aaa">Waktu Sekarang: -</span>
 </div>
-<button id="mineBtn" class="btn btn-g">⛏️ CETAK VOUCHER 10MENIT/HARI</button>
-<div class=box>Nonce: <b id="nonce">0</b> | <span id="hs">0 H/s</span> | Hash: <span id="ch">-</span></div>
-<div id="log" class=log>V29.1 VOUCHERNOMIC
-Bukan Tokenomic! Kita Voucher Chain
-100.000.000.000 Voucher / 34.000.000 Blok
-= 2,941 VQI/Blok FIX
-Height 309 = 908,823 VQI
-</div></div>
+
+<button id="mineBtn" class="btn btn-g">⚛️ CETAK VOUCHER VQI (10 MENIT/HARI)</button>
+
+<div class=box style="text-align:left;font-size:10px">
+Nonce: <b id="nonce">0</b> | <span id="hs">0 H/s</span><br>
+Prev: <span id="prev" style="font-size:7px;color:#666">-</span><br>
+Hash: <span id="ch" style="font-size:7px;color:#888">-</span><br>
+<span id="bt" style="color:#00ff88">Timestamp Blok: -</span>
+</div>
+
+<div id="log" class=log>V30 VQI - REAL TIMESTAMP VARIABLE
+Setiap blok punya waktu beda (PoW Variable)
+Bukan seragam!
+</div>
+</div>
+
 <script>
 const SUPPLY=100000000000, MAXB=34000000, REWARD=SUPPLY/MAXB;
-let H=parseInt(localStorage.getItem('height')||'309'), prev=localStorage.getItem('prev')||'0000d956', blocks=parseInt(localStorage.getItem('b')||'0');
+let H=parseInt(localStorage.getItem('height')||'309'), prev=localStorage.getItem('prev')||'0000d9568e9bc9b2ed35250b64faf07ecf67df04130a', nonce=0;
 let balance=H*REWARD;
 const S=id=>document.getElementById(id);
-S('hh').textContent=H; S('bal').textContent=balance.toLocaleString('id-ID')+' VQI';
+function fmt(t){return new Date(t).toLocaleString('id-ID',{hour12:false})+'.'+String(new Date(t).getMilliseconds()).padStart(3,'0')+' WIB';}
+function nowClock(){S('now').textContent='Waktu Sekarang: '+fmt(Date.now());}
+setInterval(nowClock,200); nowClock();
+S('hh').textContent=H; S('bal').textContent=Math.floor(balance).toLocaleString('id-ID')+' VQI'; S('prev').textContent=prev.slice(0,32)+'...';
 function k(){let d=new Date();return 'vqi_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function load(){return JSON.parse(localStorage.getItem(k())||'{"used":0}');} function save(u){localStorage.setItem(k(),JSON.stringify({used:u}));}
-const LIMIT=600; let daily=load(); let mining=false, start=0, nonce=0;
+const LIMIT=600; let daily=load(); let mining=false, blockStart=0;
 function render(p=0){let t=daily.used+p;if(t>LIMIT)t=LIMIT;let s=LIMIT-t;S('rem').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');S('fill').style.width=(t/LIMIT*100)+'%';return s;}
 render();
 async function sha(m){let b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+
 async function mine(){
- if(mining)return; daily=load(); if(daily.used>=LIMIT){S('log').innerText='⏰ HABIS 10 MENIT\n\n'+S('log').innerText;return;}
- mining=true; start=Date.now(); S('mineBtn').textContent='⏸️ STOP (SISA '+S('rem').textContent+')'; S('log').innerText='🎟️ CETAK VOUCHER Height '+(H+1)+' Reward '+REWARD.toFixed(3)+' VQI\n\n'+S('log').innerText;
+ if(mining)return; daily=load(); if(daily.used>=LIMIT){S('log').innerText='⏰ LIMIT 10 MENIT HABIS - Besok 00:00 WIB reset\n\n'+S('log').innerText;return;}
+ mining=true; blockStart=Date.now(); let sessionStart=Date.now();
+ S('mineBtn').textContent='⏸️ STOP (SISA '+S('rem').textContent+')';
+ S('log').innerText='⚛️ MULAI CETAK BLOK '+(H+1)+'\nStart: '+fmt(blockStart)+'\nPrev: '+prev.slice(0,16)+'...\nCari hash 0000... (Variable Time)\n\n'+S('log').innerText;
  let last=Date.now(),c=0;
  while(mining){
-  let el=Math.floor((Date.now()-start)/1000); if(daily.used+el>=LIMIT)break;
-  nonce++;c++; let h=await sha('VQI_'+H+'_'+nonce+'_'+prev); S('nonce').textContent=nonce; S('ch').textContent=h.slice(0,20)+'...';
-  if(nonce%40==0){let dt=(Date.now()-last)/1000; if(dt>0.5){S('hs').textContent=Math.floor(c/dt)+' H/s'; last=Date.now(); c=0;} render(el); S('mineBtn').textContent='⏸️ STOP (SISA '+S('rem').textContent+')'; await new Promise(r=>setTimeout(r,0));}
-  if(h.startsWith('0000')){H++; blocks++; balance=H*REWARD; localStorage.setItem('height',H); localStorage.setItem('b',blocks); localStorage.setItem('prev',h); S('hh').textContent=H; S('bal').textContent=balance.toLocaleString('id-ID')+' VQI'; S('log').innerText='🎉 VOUCHER BLOK '+H+' DICETAK!\nReward: '+REWARD.toLocaleString()+' VQI\nTotal Voucher: '+balance.toLocaleString()+' VQI\nHash: '+h+'\n\n'+S('log').innerText;}
+  let el=Math.floor((Date.now()-sessionStart)/1000); if(daily.used+el>=LIMIT)break;
+  nonce++;c++; let h=await sha('VQI_'+H+'_'+nonce+'_'+prev+'_'+blockStart);
+  S('nonce').textContent=nonce; S('ch').textContent=h;
+  if(nonce%30==0){let dt=(Date.now()-last)/1000; if(dt>0.5){S('hs').textContent=Math.floor(c/dt)+' H/s'; last=Date.now(); c=0;} render(el); await new Promise(r=>setTimeout(r,0));}
+  if(h.startsWith('0000')){
+   let foundTime=Date.now(); let duration=(foundTime-blockStart)/1000;
+   H++; balance=H*REWARD; localStorage.setItem('height',H); localStorage.setItem('prev',h);
+   S('hh').textContent=H; S('bal').textContent=Math.floor(balance).toLocaleString('id-ID')+' VQI'; S('bt').textContent='Timestamp Blok '+H+': '+fmt(foundTime)+' | Durasi: '+duration.toFixed(3)+'s VARIABLE';
+   S('log').innerText='🎉 BLOK '+H+' DICETAK! ✅\n'+'━━━━━━━━━━━━━━━━━━━━\nStart: '+fmt(blockStart)+'\nFinish: '+fmt(foundTime)+'\nDurasi PoW: '+duration.toFixed(3)+'s (VARIABLE - BUKAN SERAGAM!)\nReward: '+REWARD.toFixed(3)+' VQI\nTotal: '+Math.floor(balance).toLocaleString()+' VQI\nNonce: '+nonce+'\nHash: '+h+'\n━━━━━━━━━━━━━━━━━━━━\n\n'+S('log').innerText;
+   // next block
+   prev=h; nonce=0; blockStart=Date.now();
+   S('prev').textContent=prev.slice(0,32)+'...';
+  }
  }
- let fe=Math.floor((Date.now()-start)/1000); daily.used+=fe; if(daily.used>LIMIT)daily.used=LIMIT; save(daily.used); mining=false; S('mineBtn').textContent='🎟️ CETAK VOUCHER (SISA '+S('rem').textContent+')';
+ let fe=Math.floor((Date.now()-sessionStart)/1000); daily.used+=fe; if(daily.used>LIMIT)daily.used=LIMIT; save(daily.used); mining=false; S('mineBtn').textContent='⚛️ CETAK VOUCHER VQI (SISA '+S('rem').textContent+')';
 }
 S('mineBtn').onclick=()=>{if(mining){mining=false;return;}mine();};
-render();
 </script></body></html>
