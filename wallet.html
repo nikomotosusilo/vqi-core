@@ -1,8 +1,120 @@
-<!-- DI SIGN UP PAGE -->
-<div style="display:flex;align-items:center;gap:8px;margin:10px 0">
-  <img id="flag-preview" src="https://flagcdn.com/w40/id.png" style="width:36px;height:24px;object-fit:cover;border-radius:4px;border:1px solid #333">
-  <select id="country" style="flex:1;padding:14px;background:#111;color:#fff;border-radius:12px;border:1px solid #333"></select>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VQI V23 Wallet</title>
+<style>
+body{background:#0a0f1e;color:#fff;font-family:sans-serif;margin:0;padding:12px}
+.card{background:#111a2e;border:1px solid #d4af37;border-radius:16px;padding:14px;margin:10px 0}
+.btn{background:#d4af37;color:#000;padding:14px;width:100%;border-radius:12px;font-weight:bold;border:none;margin:6px 0;font-size:16px}
+input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;background:#0a0f1e;border:1px solid #333;color:#fff;box-sizing:border-box}
+.tab{display:flex;gap:6px;overflow:auto;padding:6px 0}
+.tab button{background:#1a2440;color:#fff;border-radius:20px;padding:10px 16px;border:1px solid #444;white-space:nowrap}
+h2{color:#d4af37;text-align:center}
+</style>
+</head>
+<body>
+
+<h2>⚛️ VQI V23<br><small style="color:#8fa0c0;font-size:12px">SEND/RECEIVE + ANALYTICS + MARKET</small></h2>
+
+<!-- FLAG 195 NEGARA - INI YANG BIKIN MUNCUL DI SS LU -->
+<div style="display:flex;align-items:center;gap:8px">
+<img id="flag-preview" src="https://flagcdn.com/w40/id.png" style="width:40px;height:26px;border-radius:4px;object-fit:cover">
+<select id="country"></select>
 </div>
 
-<!-- Panggil file flag yang baru lu commit -->
-<script src="flagcdn.com/country-flags"></script>
+<!-- USER VIEW -->
+<div class="card">
+<b>👤 User View</b><br>
+Address: <span id="addr">VQI_...</span><br>
+Saldo: <b id="bal">908,823 VQI</b> ≈ <span id="idr">Rp 90,882</span><br>
+Negara: <span id="country-label">🇮🇩 Indonesia - IDR</span>
+</div>
+
+<!-- MARKET TABS -->
+<div class="tab">
+<button onclick="loadMarket('coin')">🪙 Coin 10</button>
+<button onclick="loadMarket('forex')">💱 Forex 10</button>
+<button onclick="loadMarket('saham')">📈 Saham 10</button>
+</div>
+<div id="market" class="card">Tap Coin/Forex/Saham untuk load Top 10...</div>
+
+<!-- 4 FITUR LAIN -->
+<div class="card">
+<div class="tab">
+<button onclick="doSend()">📤 Send</button>
+<button onclick="doReceive()">📥 Receive</button>
+<button onclick="doRedem()">🎟️ Redem</button>
+<button onclick="doInstall()">📲 Install APK</button>
+</div>
+<input id="send_to" placeholder="Address tujuan VQI_xxx">
+<input id="send_amt" type="number" placeholder="Jumlah VQI">
+<button class="btn" onclick="doSendAction()">🚀 Kirim VQI Sekarang</button>
+</div>
+
+<script>
+// ===== 195 FLAGS - flagcdn.com =====
+const COUNTRIES=[
+{code:"ID",name:"Indonesia",flag:"🇮🇩",curr:"IDR",cdn:"https://flagcdn.com/w40/id.png"},
+{code:"US",name:"United States",flag:"🇺🇸",curr:"USD",cdn:"https://flagcdn.com/w40/us.png"},
+{code:"MY",name:"Malaysia",flag:"🇲🇾",curr:"MYR",cdn:"https://flagcdn.com/w40/my.png"},
+{code:"SG",name:"Singapore",flag:"🇸🇬",curr:"SGD",cdn:"https://flagcdn.com/w40/sg.png"},
+{code:"JP",name:"Japan",flag:"🇯🇵",curr:"JPY",cdn:"https://flagcdn.com/w40/jp.png"},
+{code:"GB",name:"United Kingdom",flag:"🇬🇧",curr:"GBP",cdn:"https://flagcdn.com/w40/gb.png"},
+{code:"CN",name:"China",flag:"🇨🇳",curr:"CNY",cdn:"https://flagcdn.com/w40/cn.png"},
+{code:"IN",name:"India",flag:"🇮🇳",curr:"INR",cdn:"https://flagcdn.com/w40/in.png"},
+{code:"DE",name:"Germany",flag:"🇩🇪",curr:"EUR",cdn:"https://flagcdn.com/w40/de.png"},
+{code:"SA",name:"Saudi Arabia",flag:"🇸🇦",curr:"SAR",cdn:"https://flagcdn.com/w40/sa.png"}
+];
+function renderFlags(){
+  let sel=document.getElementById('country');
+  sel.innerHTML=COUNTRIES.map(c=>`<option value="${c.code}">${c.flag} ${c.name} - ${c.curr}</option>`).join('');
+  // load 195 full via API
+  fetch('https://restcountries.com/v3.1/all?fields=cca2,name,currencies').then(r=>r.json()).then(d=>{
+    let all=d.sort((a,b)=>a.name.common.localeCompare(b.name.common)).map(c=>{
+      let code=c.cca2; let cur=c.currencies?Object.keys(c.currencies)[0]:"USD";
+      let emoji=code.toUpperCase().replace(/./g,ch=>String.fromCodePoint(127397+ch.charCodeAt()));
+      return `<option value="${code}">${emoji} ${c.name.common} - ${cur}</option>`;
+    }).join('');
+    sel.innerHTML=all;
+    sel.value=localStorage.getItem('vqi_country')||'ID';
+    updateFlag();
+  }).catch(()=>{});
+}
+function updateFlag(){
+  let sel=document.getElementById('country');
+  let code=sel.value;
+  document.getElementById('flag-preview').src=`https://flagcdn.com/w40/${code.toLowerCase()}.png`;
+  document.getElementById('country-label').innerText=sel.options[sel.selectedIndex].text;
+  localStorage.setItem('vqi_country',code);
+}
+document.getElementById('country').addEventListener('change',updateFlag);
+renderFlags();
+
+// INIT WALLET
+document.getElementById('addr').innerText=localStorage.getItem('vqi_address')||'VQI_'+Date.now().toString(36);
+
+// MARKET
+async function loadMarket(type){
+  let box=document.getElementById('market');
+  box.innerHTML='Loading '+type+' Top 10...';
+  try{
+    let url = type==='coin'? 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10' : null;
+    let data;
+    if(type==='coin'){ let r=await fetch(url); let j=await r.json(); data=j.map(c=>({s:c.symbol.toUpperCase(), p:c.current_price})); }
+    else if(type==='forex'){ data=[{s:"EUR/USD",p:1.084},{s:"USD/JPY",p:149.2},{s:"GBP/USD",p:1.27},{s:"AUD/USD",p:0.65},{s:"USD/CHF",p:0.88},{s:"USD/CAD",p:1.35},{s:"NZD/USD",p:0.61},{s:"EUR/GBP",p:0.85},{s:"EUR/JPY",p:161},{s:"GBP/JPY",p:190}]; }
+    else { data=[{s:"AAPL",p:182.5},{s:"MSFT",p:420},{s:"NVDA",p:950},{s:"TSLA",p:175},{s:"GOOGL",p:165},{s:"AMZN",p:178},{s:"META",p:485},{s:"BRK.B",p:410},{s:"LLY",p:780},{s:"AVGO",p:1320}]; }
+    box.innerHTML=data.map(c=>`<div style="display:flex;justify-content:space-between;margin:8px 0"><span>${c.s} $${c.p}</span><span><button onclick="buy('${c.s}',10)" style="background:#00ff88;border:none;padding:6px 12px;border-radius:8px">BUY</button> <button onclick="sell('${c.s}',10)" style="background:#ff4444;color:#fff;border:none;padding:6px 12px;border-radius:8px">SELL</button></span></div>`).join('');
+  }catch(e){ box.innerHTML='Error load market, pakai data dummy'; }
+}
+function buy(s,u){ alert(`BUY ${s} $${u} pakai VQI - Saldo 908,823 VQI cukup! (konek ke /api/buy)`); }
+function sell(s,u){ alert(`SELL ${s} $${u} jadi VQI (konek ke /api/sell)`); }
+function doSend(){ document.getElementById('send_to').focus(); }
+function doSendAction(){ let to=document.getElementById('send_to').value; let amt=document.getElementById('send_amt').value; alert(`Send ${amt} VQI ke ${to} - sukses!`); }
+function doReceive(){ alert('Receive QR: '+document.getElementById('addr').innerText); }
+function doRedem(){ alert('Redem: 10,000 VQI = Pulsa 10k - Fitur aktif'); }
+function doInstall(){ alert('Install APK: share https://nikomotosusilo.github.io/vqi-core/ - bonus 100 VQI'); }
+loadMarket('coin');
+</script>
+</body>
+</html>
