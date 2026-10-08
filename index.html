@@ -1,68 +1,191 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V30 VQI REAL TIMESTAMP</title><style>body{background:#000;color:#fff;font-family:monospace;margin:0;padding:10px}.card{border:2px solid #00ff88;border-radius:22px;padding:14px;background:#0a0a0a;max-width:620px;margin:auto}.box{border:1px dashed #00ff88;border-radius:14px;padding:12px;text-align:center;margin:10px 0;font-size:11px;background:#000}.btn{padding:14px;border-radius:14px;border:none;font-weight:900;width:100%;cursor:pointer}.btn-g{background:#00ff88;color:#000}.log{background:#000;border:1px solid #333;border-radius:12px;padding:10px;font-size:9px;color:#0f0;min-height:200px;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow:auto;line-height:1.4}.bar{height:10px;background:#222;border-radius:10px;overflow:hidden;margin:6px 0}.fill{height:100%;background:#00ff88}</style></head><body>
-<div class=card>
-<h2 style="text-align:center;margin:4px">⚛️ VOUCHE QUANTUM INTI<br><span style="font-size:18px;color:#00ff88">VQI CHAIN V30</span></h2>
-<div style="text-align:center;font-size:9px;color:#888">Vouchernomic: 100B VQI / 34M Blocks • PoW Variable • Real Timestamp</div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VQI CHAIN V31 REAL - Proof of Work</title>
+<script>if(!localStorage.getItem('vqi_session')) location.href='index.html';</script>
+<link rel="icon" href="logo-vqi.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:monospace}
+body{background:#050505;color:#0f0;padding:15px}
+.header{display:flex;justify-content:space-between;align-items:center;border:2px solid #00ff88;border-radius:12px;padding:12px;background:#111}
+.header img{width:50px;height:50px;border-radius:50%;background:#000}
+.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-weight:bold;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.box{border:1px solid #00ff8855;border-radius:12px;padding:12px;background:#111}
+.box h3{color:#00ff88;font-size:13px;margin-bottom:6px}
+.big{font-size:26px;color:#fff}
+.hash{font-size:10px;word-break:break-all;color:#888}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;background:#00ff88;color:#000;font-weight:900;cursor:pointer;margin:6px 0}
+.btn:disabled{opacity:0.5}
+.btn2{background:transparent;border:1px solid #00ff88;color:#00ff88}
+.log{height:280px;overflow:auto;background:#000;border-radius:10px;padding:10px;font-size:11px;border:1px solid #222}
+.block{border-left:3px solid #00ff88;padding:8px;margin:8px 0;background:#0a0a0a}
+</style>
+</head>
+<body>
 
-<div class=box>
-Blok <b id="hh">309</b> / 34,000,000 | Total Voucher: 100B VQI<br>
-Saldo: <b id="bal" style="color:#00ff88;font-size:16px">908,823 VQI</b> | Reward: <b style="color:#ff0">2,941 VQI/Blok</b><br><br>
-Sisa Hari Ini: <b id="rem">10:00</b> <div class=bar><div id="fill" class=fill></div></div>
-<span id="now" style="font-size:9px;color:#aaa">Waktu Sekarang: -</span>
+<div class="header">
+  <div style="display:flex;gap:10px;align-items:center">
+    <img src="logo-vqi.png" onerror="this.src='https://nikimotosusilo.github.io/vqi-core/logo-vqi.png'">
+    <div><b>VQI V31 REAL</b><br><small id="user">loading...</small></div>
+  </div>
+  <div>
+    <span class="badge" id="verifyBadge">VERIFYING...</span><br>
+    <button onclick="logout()" style="background:none;border:none;color:#f55;font-size:11px;cursor:pointer;margin-top:5px">Logout</button>
+  </div>
 </div>
 
-<button id="mineBtn" class="btn btn-g">⚛️ CETAK VOUCHER VQI (10 MENIT/HARI)</button>
-
-<div class=box style="text-align:left;font-size:10px">
-Nonce: <b id="nonce">0</b> | <span id="hs">0 H/s</span><br>
-Prev: <span id="prev" style="font-size:7px;color:#666">-</span><br>
-Hash: <span id="ch" style="font-size:7px;color:#888">-</span><br>
-<span id="bt" style="color:#00ff88">Timestamp Blok: -</span>
+<div class="grid">
+  <div class="box"><h3>SALDO (AUTO COMPUTED)</h3><div class="big" id="saldo">0 VQI</div><small id="calcInfo">hitung dari 0 blok</small></div>
+  <div class="box"><h3>TOTAL SUPPLY / 100B</h3><div class="big" id="supply">0</div><small id="blockHeight">Blok #0</small></div>
 </div>
 
-<div id="log" class=log>V30 VQI - REAL TIMESTAMP VARIABLE
-Setiap blok punya waktu beda (PoW Variable)
-Bukan seragam!
+<div class="box">
+  <h3>⛏️ MINER - PROOF OF WORK SHA-256</h3>
+  <p style="font-size:11px;color:#888;margin:6px 0">Hash harus diawali 0000 (difficulty 4). Ini bukti kerja komputer beneran, bukan angka tempelan. Whale bisa cek hash di explorer.</p>
+  <div style="display:flex;gap:8px">
+    <button class="btn" id="mineBtn" onclick="mineOne()">MINE 1 BLOK (+50 VQI)</button>
+    <button class="btn btn2" onclick="verifyChain()">VERIFY CHAIN</button>
+  </div>
+  <div class="hash" id="miningStatus">Idle - siap nambang</div>
 </div>
+
+<div class="grid">
+  <div class="box"><h3>EXPLORER - LAST 10 BLOCKS</h3><div class="log" id="explorer"></div></div>
+  <div class="box"><h3>TRANSACTION LEDGER</h3><div class="log" id="ledger"></div></div>
 </div>
 
 <script>
-const SUPPLY=100000000000, MAXB=34000000, REWARD=SUPPLY/MAXB;
-let H=parseInt(localStorage.getItem('height')||'309'), prev=localStorage.getItem('prev')||'0000d9568e9bc9b2ed35250b64faf07ecf67df04130a', nonce=0;
-let balance=H*REWARD;
-const S=id=>document.getElementById(id);
-function fmt(t){return new Date(t).toLocaleString('id-ID',{hour12:false})+'.'+String(new Date(t).getMilliseconds()).padStart(3,'0')+' WIB';}
-function nowClock(){S('now').textContent='Waktu Sekarang: '+fmt(Date.now());}
-setInterval(nowClock,200); nowClock();
-S('hh').textContent=H; S('bal').textContent=Math.floor(balance).toLocaleString('id-ID')+' VQI'; S('prev').textContent=prev.slice(0,32)+'...';
-function k(){let d=new Date();return 'vqi_'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-function load(){return JSON.parse(localStorage.getItem(k())||'{"used":0}');} function save(u){localStorage.setItem(k(),JSON.stringify({used:u}));}
-const LIMIT=600; let daily=load(); let mining=false, blockStart=0;
-function render(p=0){let t=daily.used+p;if(t>LIMIT)t=LIMIT;let s=LIMIT-t;S('rem').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');S('fill').style.width=(t/LIMIT*100)+'%';return s;}
-render();
-async function sha(m){let b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+const DIFFICULTY = 4;
+const REWARD = 50;
+const MAX_SUPPLY = 100_000_000_000;
 
-async function mine(){
- if(mining)return; daily=load(); if(daily.used>=LIMIT){S('log').innerText='⏰ LIMIT 10 MENIT HABIS - Besok 00:00 WIB reset\n\n'+S('log').innerText;return;}
- mining=true; blockStart=Date.now(); let sessionStart=Date.now();
- S('mineBtn').textContent='⏸️ STOP (SISA '+S('rem').textContent+')';
- S('log').innerText='⚛️ MULAI CETAK BLOK '+(H+1)+'\nStart: '+fmt(blockStart)+'\nPrev: '+prev.slice(0,16)+'...\nCari hash 0000... (Variable Time)\n\n'+S('log').innerText;
- let last=Date.now(),c=0;
- while(mining){
-  let el=Math.floor((Date.now()-sessionStart)/1000); if(daily.used+el>=LIMIT)break;
-  nonce++;c++; let h=await sha('VQI_'+H+'_'+nonce+'_'+prev+'_'+blockStart);
-  S('nonce').textContent=nonce; S('ch').textContent=h;
-  if(nonce%30==0){let dt=(Date.now()-last)/1000; if(dt>0.5){S('hs').textContent=Math.floor(c/dt)+' H/s'; last=Date.now(); c=0;} render(el); await new Promise(r=>setTimeout(r,0));}
-  if(h.startsWith('0000')){
-   let foundTime=Date.now(); let duration=(foundTime-blockStart)/1000;
-   H++; balance=H*REWARD; localStorage.setItem('height',H); localStorage.setItem('prev',h);
-   S('hh').textContent=H; S('bal').textContent=Math.floor(balance).toLocaleString('id-ID')+' VQI'; S('bt').textContent='Timestamp Blok '+H+': '+fmt(foundTime)+' | Durasi: '+duration.toFixed(3)+'s VARIABLE';
-   S('log').innerText='🎉 BLOK '+H+' DICETAK! ✅\n'+'━━━━━━━━━━━━━━━━━━━━\nStart: '+fmt(blockStart)+'\nFinish: '+fmt(foundTime)+'\nDurasi PoW: '+duration.toFixed(3)+'s (VARIABLE - BUKAN SERAGAM!)\nReward: '+REWARD.toFixed(3)+' VQI\nTotal: '+Math.floor(balance).toLocaleString()+' VQI\nNonce: '+nonce+'\nHash: '+h+'\n━━━━━━━━━━━━━━━━━━━━\n\n'+S('log').innerText;
-   // next block
-   prev=h; nonce=0; blockStart=Date.now();
-   S('prev').textContent=prev.slice(0,32)+'...';
-  }
- }
- let fe=Math.floor((Date.now()-sessionStart)/1000); daily.used+=fe; if(daily.used>LIMIT)daily.used=LIMIT; save(daily.used); mining=false; S('mineBtn').textContent='⚛️ CETAK VOUCHER VQI (SISA '+S('rem').textContent+')';
+let blockchain = [];
+let myAddress = '';
+
+function logout(){ localStorage.removeItem('vqi_session'); location.href='index.html'; }
+
+async function sha256(msg){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-S('mineBtn').onclick=()=>{if(mining){mining=false;return;}mine();};
-</script></body></html>
+
+class Block{
+  constructor(index, timestamp, transactions, prevHash=''){
+    this.index=index;
+    this.timestamp=timestamp;
+    this.transactions=transactions;
+    this.prevHash=prevHash;
+    this.nonce=0;
+    this.hash='';
+  }
+  async calcHash(){
+    return await sha256(this.index+this.timestamp+JSON.stringify(this.transactions)+this.prevHash+this.nonce);
+  }
+  async mine(){
+    let target='0'.repeat(DIFFICULTY);
+    while(true){
+      this.hash = await this.calcHash();
+      if(this.hash.startsWith(target)) break;
+      this.nonce++;
+      if(this.nonce%5000===0){
+        document.getElementById('miningStatus').textContent = `Mining #${this.index} nonce=${this.nonce} hash=${this.hash.substring(0,20)}...`;
+        await new Promise(r=>setTimeout(r,0));
+      }
+    }
+  }
+}
+
+function loadChain(){
+  const saved = localStorage.getItem('vqi_chain_v31');
+  const sess = JSON.parse(localStorage.getItem('vqi_session')||'{}');
+  myAddress = sess.email || 'anon@vqi';
+  document.getElementById('user').textContent = (sess.username||'Miner')+' • '+myAddress;
+  if(saved){
+    blockchain = JSON.parse(saved);
+  } else {
+    blockchain = [];
+  }
+}
+
+function saveChain(){ localStorage.setItem('vqi_chain_v31', JSON.stringify(blockchain)); }
+
+function getBalance(address){
+  let bal=0;
+  for(let b of blockchain){
+    for(let tx of b.transactions){
+      if(tx.to===address) bal+=tx.amount;
+      if(tx.from===address) bal-=tx.amount;
+    }
+  }
+  return bal;
+}
+
+function render(){
+  let bal = getBalance(myAddress);
+  document.getElementById('saldo').textContent = bal.toLocaleString('id-ID')+' VQI';
+  document.getElementById('calcInfo').textContent = `dihitung dari ${blockchain.length} blok x ${REWARD} - tx`;
+  document.getElementById('supply').textContent = (blockchain.length*REWARD).toLocaleString('id-ID');
+  document.getElementById('blockHeight').textContent = `Blok #${blockchain.length} / 34M target`;
+
+  // explorer
+  let exp = document.getElementById('explorer');
+  exp.innerHTML = blockchain.slice(-10).reverse().map(b=>`
+    <div class="block">
+      <b>#${b.index} ${b.hash.substring(0,18)}...</b><br>
+      Prev: ${b.prevHash.substring(0,12)}...<br>
+      Nonce: ${b.nonce} | Tx: ${b.transactions.length}<br>
+      <span style="color:#00ff88">${b.transactions[0]?.amount||0} VQI → ${b.transactions[0]?.to?.substring(0,15)}</span>
+    </div>
+  `).join('') || '<small>Belum ada blok, mining dulu!</small>';
+
+  let led = document.getElementById('ledger');
+  let allTx=[];
+  blockchain.forEach(b=>allTx.push(...b.transactions));
+  led.innerHTML = allTx.slice(-20).reverse().map(t=>`
+    <div style="border-bottom:1px dashed #222;padding:4px 0">
+      ${t.from==='SYSTEM'?'🎁': '➡️'} ${t.amount} VQI ${t.from} → ${t.to}<br><small>${new Date(t.time).toLocaleTimeString()}</small>
+    </div>
+  `).join('') || '<small>No tx</small>';
+}
+
+async function mineOne(){
+  let btn=document.getElementById('mineBtn');
+  btn.disabled=true; btn.textContent='MINING... (butuh 5-15 detik)';
+
+  let prevHash = blockchain.length? blockchain[blockchain.length-1].hash : '0'.repeat(64);
+  let newBlock = new Block(blockchain.length, Date.now(), [{from:'SYSTEM',to:myAddress,amount:REWARD,time:Date.now()}], prevHash);
+  await newBlock.mine();
+
+  blockchain.push({index:newBlock.index,timestamp:newBlock.timestamp,transactions:newBlock.transactions,prevHash:newBlock.prevHash,nonce:newBlock.nonce,hash:newBlock.hash});
+  saveChain();
+  render();
+  document.getElementById('miningStatus').textContent = `✅ Blok #${newBlock.index} mined! Hash=${newBlock.hash} Nonce=${newBlock.nonce}`;
+  btn.disabled=false; btn.textContent='MINE 1 BLOK (+50 VQI)';
+}
+
+async function verifyChain(){
+  let badge=document.getElementById('verifyBadge');
+  badge.textContent='CHECKING...'; badge.style.background='#ff0';
+  for(let i=0;i<blockchain.length;i++){
+    let b=blockchain[i];
+    let calc = await sha256(b.index+b.timestamp+JSON.stringify(b.transactions)+b.prevHash+b.nonce);
+    if(calc!==b.hash ||!b.hash.startsWith('0'.repeat(DIFFICULTY))){
+      badge.textContent='❌ INVALID CHAIN'; badge.style.background='#f44'; return alert('Chain INVALID di blok #'+i);
+    }
+    if(i>0 && b.prevHash!==blockchain[i-1].hash){
+      badge.textContent='❌ BROKEN LINK'; badge.style.background='#f44'; return;
+    }
+  }
+  badge.textContent='✅ VERIFIED '+blockchain.length+' BLOCKS'; badge.style.background='#00ff88';
+  alert('Chain VALID! '+blockchain.length+' blok terverifikasi SHA-256 Proof of Work.');
+}
+
+loadChain();
+render();
+verifyChain();
+</script>
+</body>
+</html>
