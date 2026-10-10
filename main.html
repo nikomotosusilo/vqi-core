@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VQI Blockchain — Secure Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vqi: {
+                            dark: '#0F172A',
+                            card: '#1E293B',
+                            primary: '#3B82F6',
+                            secondary: '#10B981',
+                            accent: '#8B5CF6',
+                            danger: '#EF4444',
+                            muted: '#94A3B8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .hash-text { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+            .auth-card { @apply bg-vqi-card rounded-xl border border-gray-700/50 shadow-xl; }
+            .input-field { @apply w-full bg-vqi-dark border border-gray-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-vqi-primary transition; }
+            .btn-primary { @apply bg-vqi-primary hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition; }
+            .btn-secondary { @apply bg-gray-700/50 hover:bg-gray-600 text-white font-medium py-2.5 px-4 rounded-lg transition; }
+        }
+    </style>
+</head>
+<body class="bg-vqi-dark text-gray-100 min-h-screen">
+    <!-- ====================================== -->
+    <!-- HALAMAN LOGIN -->
+    <!-- ====================================== -->
+    <section id="page-login" class="min-h-screen flex items-center justify-center px-4">
+        <div class="auth-card w-full max-w-md p-8">
+            <div class="text-center mb-8">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-vqi-primary to-vqi-accent flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-link fa-2x text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold">VQI Blockchain</h1>
+                <p class="text-vqi-muted">Secure Transaction Explorer</p>
+            </div>
+
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Alamat Email</label>
+                    <input type="email" id="loginEmail" class="input-field" placeholder="email@vqi.id" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Kata Sandi</label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword" class="input-field pr-10" placeholder="••••••••" required>
+                        <button type="button" id="toggleLoginPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-vqi-muted">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="rememberMe" class="accent-vqi-primary"> Ingat Saya
+                    </label>
+                    <a href="#" id="linkToReset" class="text-vqi-primary hover:underline">Lupa Kata Sandi?</a>
+                </div>
+                <div id="loginError" class="text-vqi-danger text-sm hidden"></div>
+                <button type="submit" class="btn-primary w-full">
+                    <i class="fa fa-sign-in mr-2"></i> Masuk
+                </button>
+            </form>
+
+            <p class="text-center text-sm mt-6 text-vqi-muted">
+                Belum punya akun? 
+                <a href="#" id="linkToSignup" class="text-vqi-primary hover:underline">Daftar Sekarang</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ====================================== -->
+    <!-- HALAMAN REGISTER -->
+    <!-- ====================================== -->
+    <section id="page-signup" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="auth-card w-full max-w-md p-8">
+            <div class="text-center mb-8">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-vqi-secondary to-vqi-accent flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-user-plus fa-2x text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold">Buat Akun Baru</h1>
+                <p class="text-vqi-muted">Bergabung dengan Jaringan VQI</p>
+            </div>
+
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Nama Lengkap</label>
+                    <input type="text" id="signupName" class="input-field" placeholder="Nama Anda" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Alamat Email</label>
+                    <input type="email" id="signupEmail" class="input-field" placeholder="email@vqi.id" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Kata Sandi</label>
+                    <div class="relative">
+                        <input type="password" id="signupPassword" class="input-field pr-10" placeholder="Min. 8 karakter" required>
+                        <button type="button" id="toggleSignupPass" class="absolute right-3 top-1/2 -translate-y-1/2 text-vqi-muted">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="mt-1 h-1 bg-gray-700 rounded overflow-hidden">
+                        <div id="passStrength" class="h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Konfirmasi Kata Sandi</label>
+                    <input type="password" id="signupConfirm" class="input-field" placeholder="Ulangi kata sandi" required>
+                </div>
+                <label class="flex items-start gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" id="agreeTerms" class="accent-vqi-primary mt-1" required>
+                    <span>Saya setuju dengan <a href="#" class="text-vqi-primary hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-vqi-primary hover:underline">Kebijakan Privasi</a></span>
+                </label>
+                <div id="signupError" class="text-vqi-danger text-sm hidden"></div>
+                <button type="submit" class="btn-primary w-full">
+                    <i class="fa fa-check-circle mr-2"></i> Daftar
+                </button>
+            </form>
+
+            <p class="text-center text-sm mt-6 text-vqi-muted">
+                Sudah punya akun? 
+                <a href="#" id="linkToLoginFromSignup" class="text-vqi-primary hover:underline">Masuk</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ====================================== -->
+    <!-- HALAMAN LUPA KATA SANDI -->
+    <!-- ====================================== -->
+    <section id="page-reset" class="min-h-screen flex items-center justify-center px-4 hidden">
+        <div class="auth-card w-full max-w-md p-8">
+            <div class="text-center mb-8">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-key fa-2x text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold">Lupa Kata Sandi?</h1>
+                <p class="text-vqi-muted">Masukkan email untuk mereset</p>
+            </div>
+
+            <form id="resetForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Alamat Email</label>
+                    <input type="email" id="resetEmail" class="input-field" placeholder="email@vqi.id" required>
+                </div>
+                <div id="resetMessage" class="text-sm hidden"></div>
+                <button type="submit" class="btn-primary w-full">
+                    <i class="fa fa-paper-plane mr-2"></i> Kirim Tautan Reset
+                </button>
+            </form>
+
+            <p class="text-center text-sm mt-6 text-vqi-muted">
+                <a href="#" id="linkToLoginFromReset" class="text-vqi-primary hover:underline">
+                    <i class="fa fa-arrow-left mr-1"></i> Kembali ke Halaman Masuk
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ====================================== -->
+    <!-- HALAMAN DASHBOARD UTAMA -->
+    <!-- ====================================== -->
+    <section id="page-dashboard" class="hidden">
+        <!-- Header / Navbar -->
+        <header class="border-b border-gray-700/50 bg-vqi-card/80 backdrop-blur-sm sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-vqi-primary to-vqi-accent flex items-center justify-center">
+                        <i class="fa fa-link fa-lg text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">VQI Blockchain</h1>
+                        <p class="text-xs text-vqi-muted">Quantum Chain Explorer</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 text-sm text-vqi-muted">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span id="networkStatus">Tersinkronisasi</span>
+                    </div>
+                    <span class="text-sm font-mono bg-vqi-primary/20 text-vqi-primary px-2 py-1 rounded">
+                        Blok #<span id="blockHeight">0</span>
+                    </span>
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-sm">
+                            <div class="w-8 h-8 rounded-full bg-vqi-primary/30 flex items-center justify-center">
+                                <i class="fa fa-user text-vqi-primary"></i>
+                            </div>
+                            <span id="userName" class="hidden sm:inline">Pengguna</span>
+                            <i class="fa fa-chevron-down text-xs text-vqi-muted"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-vqi-card border border-gray-700/50 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-vqi-primary/10">
+                                <i class="fa fa-cog mr-2 text-vqi-muted"></i>Pengaturan
+                            </a>
+                            <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-vqi-danger hover:bg-vqi-danger/10">
+                                <i class="fa fa-sign-out mr-2"></i>Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-6">
+            <!-- Selamat Datang -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold">Selamat Datang, <span id="dashboardUser">Pengguna</span>! 👋</h2>
+                <p class="text-vqi-muted">Berikut adalah data transaksi jaringan VQI Blockchain</p>
+            </div>
+
+            <!-- Statistik Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-vqi-card rounded-xl p-5 border border-gray-700/50">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-vqi-muted text-sm">Total Transaksi</span>
+                        <i class="fa fa-exchange text-vqi-primary"></i>
+                    </div>
+                    <p class="text-2xl font-bold" id="totalTx">0</p>
+                </div>
+                <div class="bg-vqi-card rounded-xl p-5 border border-gray-700/50">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-vqi-muted text-sm">Total Nilai (VQI)</span>
+                        <i class="fa fa-coins text-vqi-secondary"></i>
+                    </div>
+                    <p class="text-2xl font-bold" id="totalAmount">0</p>
+                </div>
+                <div class="bg-vqi-card rounded-xl p-5 border border-gray-700/50">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-vqi-muted text-sm">Blok Terbaru</span>
+                        <i class="fa fa-cubes text-vqi-accent"></i>
+                    </div>
+                    <p class="text-2xl font-bold" id="latestBlock">#0</p>
+                </div>
+                <div class="bg-vqi-card rounded-xl p-5 border border-gray-700/50">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-vqi-muted text-sm">Validators Aktif</span>
+                        <i class="fa fa-shield text-yellow-500"></i>
+                    </div>
+                    <p class="text-2xl font-bold" id="validators">0</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="bg-vqi-card rounded-xl p-5 border border-gray-700/50 mb-6">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-vqi-muted"></i>
+                        <input type="text" id="searchInput" placeholder="Cari Hash, Alamat Pengirim/Penerima..." 
+                            class="w-full bg-vqi-dark border border-gray-600 rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:border-vqi-primary transition">
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="filterBlock" class="bg-vqi-dark border border-gray-600 rounded-lg px-3 py-2.5 focus:outline-none">
+                            <option value="">Semua Blok</option>
+                        </select>
+                        <button id="refreshBtn" class="bg-vqi-primary hover:bg-blue-600 px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+                            <i class="fa fa-refresh"></i>
+                            <span class="hidden sm:inline">Segarkan</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel Transaksi -->
+            <div class="bg-vqi-card rounded-xl border border-gray-700/50 overflow-hidden">
+                <div class="px-5 py-4 border-b border-gray-700/50 flex items-center justify-between">
+                    <h2 class="font-semibold text-lg">Daftar Transaksi</h2>
+                    <span class="text-sm text-vqi-muted">Menampilkan <span id="showingCount">0</span> transaksi</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-vqi-muted border-b border-gray-700/50">
+                                <th class="px-5 py-3 font-medium">Tx Hash</th>
+                                <th class="px-5 py-3 font-medium">Blok</th>
+                                <th class="px-5 py-3 font-medium">Dari</th>
+                                <th class="px-5 py-3 font-medium">Ke</th>
+                                <th class="px-5 py-3 font-medium text-right">Jumlah (VQI)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txTableBody" class="divide-y divide-gray-700/30">
+                            <tr>
+                                <td colspan="5" class="px-5 py-10 text-center text-vqi-muted">
+                                    <i class="fa fa-spinner fa-spin fa-2xl mb-3"></i>
+                                    <p>Memuat data transaksi...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-5 py-4 border-t border-gray-700/50 flex items-center justify-between">
+                    <button id="prevPage" class="px-3 py-1.5 bg-gray-700/50 rounded hover:bg-gray-600 transition disabled:opacity-40" disabled>
+                        <i class="fa fa-chevron-left mr-1"></i> Sebelumnya
+                    </button>
+                    <span class="text-sm text-vqi-muted">Halaman <span id="pageNum">1</span> dari <span id="totalPages">1</span></span>
+                    <button id="nextPage" class="px-3 py-1.5 bg-gray-700/50 rounded hover:bg-gray-600 transition disabled:opacity-40" disabled>
+                        Berikutnya <i class="fa fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal Detail Transaksi -->
+        <div id="txModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div class="bg-vqi-card rounded-xl border border-gray-700/50 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
+                <div class="p-5 border-b border-gray-700/50 flex items-center justify-between">
+                    <h3 class="font-semibold text-lg">Detail Transaksi</h3>
+                    <button id="closeModal" class="text-vqi-muted hover:text-white">
+                        <i class="fa fa-times fa-lg"></i>
+                    </button>
+                </div>
+                <div id="modalContent" class="p-5 space-y-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // =====================
+        // NAVIGASI ANTAR HALAMAN
+        // =====================
+        const PAGES = {
+            login: 'page-login',
+            signup: 'page-signup',
+            reset: 'page-reset',
+            dashboard: 'page-dashboard'
+        };
+
+        function showPage(pageName) {
+            Object.values(PAGES).forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(PAGES[pageName]).classList.remove('hidden');
+        }
+
+        // =====================
+        // SIMULASI PENYIMPANAN DATA AKUN
+        // =====================
+        const STORAGE_KEY = 'vqi_user_session';
+
+        function getUsers() {
+            const data = localStorage.getItem('vqi_users');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveUser(name, email, password) {
+            const users = getUsers();
+            if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+                return { success: false, message: 'Email sudah terdaftar!' };
+            }
+            users.push({ name, email, password });
+            localStorage.setItem('vqi_users', JSON.stringify(users));
+            return { success: true };
+        }
+
+        function verifyUser(email, password) {
+            const users = getUsers();
+            const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+            if (user) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: user.name, email: user.email }));
+                return { success: true, user };
+            }
+            return { success: false, message: 'Email atau kata sandi salah!' };
+        }
+
+        function getSession() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        }
+
+        function logout() {
+            localStorage.removeItem(STORAGE_KEY);
+            showPage('login');
+        }
+
+        // =====================
+        // UTILITAS
+        // =====================
+        function togglePassword(inputId, btnId) {
+            const input = document.getElementById(inputId);
+            const icon = document.querySelector(`#${btnId} i`);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function updatePassStrength(password) {
+            const bar = document.getElementById('passStrength');
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-vqi-secondary'];
+            const widths = ['w-1/4', 'w-2/4', 'w-3/4', 'w-full'];
+            
+            bar.className = `h-full transition-all duration-300 ${colors[score]}`;
+            bar.style.width = score > 0 ? widths[score-1].replace('w-', '').replace('/4', '%').replace('1', '25').replace('2', '50').replace('3', '75').replace('full', '100') : '0%';
+            bar.style.width = [0, '25%', '50%', '75%', '100%'][score];
+        }
+
+        function shortenHash(hash, start = 8, end = 6) {
+            if (!hash) return '-';
+            if (hash.length <= start + end) return hash;
+            return hash.substring(0, start) + '...' + hash.substring(hash.length - end);
+        }
+
+        // =====================
+        // DATA TRANSAKSI SIMULASI
+        // =====================
+        let allTransactions = [];
+        let filteredTxs = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+
+        function sha512(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16).repeat(16);
+        }
+
+        function generateMockData(count = 50) {
+            const txs = [];
+            const addresses = [
+                "VQMiner_0x77abc123def",
+                "STORE_ABC_0x88def456abc",
+                "USER_0x1234567890ab",
+                "EXCHANGE_0xabcdef123456",
+                "MERCHANT_0x998877665544"
+            ];
+            
+            for (let i = 1; i <= count; i++) {
+                const from = addresses[Math.floor(Math.random() * addresses.length)];
+                let to = addresses[Math.floor(Math.random() * addresses.length)];
+                while (to === from) to = addresses[Math.floor(Math.random() * addresses.length)];
+                
+                txs.push({
+                    tx_hash: sha512(`tx_${i}_${Date.now()}_${Math.random()}`).substring(0, 128),
+                    block_height: Math.floor(i / 2) + 100,
+                    from_address: from,
+                    to_address: to,
+                    amount: (Math.random() * 1000 + 0.01).toFixed(8)
+                });
+            }
+            return txs.sort((a, b) => b.block_height - a.block_height);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('txTableBody');
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageData = filteredTxs.slice(start, end);
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-5 py-10 text-center text-vqi-muted">
+                            <i class="fa fa-inbox fa-2xl mb-3"></i>
+                            <p>Tidak ada transaksi yang ditemukan</p>
+                        </td>
+                    </tr>
+                `;
+                updatePagination();
+                return;
+            }
+
+            tbody.innerHTML = pageData.map(tx => `
+                <tr class="hover:bg-vqi-primary/5 cursor-pointer transition" data-tx='${JSON.stringify(tx)}'>
+                    <td class="px-5 py-3 hash-text text-vqi-primary" title="${tx.tx_hash}">
+                        ${shortenHash(tx.tx_hash, 10, 8)}
+                    </td>
+                    <td class="px-5 py-3 text-vqi-accent font-mono">#${tx.block_height}</td>
+                    <td class="px-5 py-3 text-sm" title="${tx.from_address}">
+                        ${shortenHash(tx.from_address, 6, 4)}
+                    </td>
+                    <td class="px-5 py-3 text-sm" title="${tx.to_address}">
+                        ${shortenHash(tx.to_address, 6, 4)}
+                    </td>
+                    <td class="px-5 py-3 text-right font-mono text-vqi-secondary">
+                        ${parseFloat(tx.amount).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('showingCount').textContent = filteredTxs.length;
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredTxs.length / ITEMS_PER_PAGE) || 1;
+            document.getElementById('pageNum').textContent = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        }
+
+        function updateStats() {
+            document.getElementById('totalTx').textContent = allTransactions.length.toLocaleString('id-ID');
+            const totalAmt = allTransactions.reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
+            document.getElementById('totalAmount').textContent = totalAmt.toLocaleString('id-ID', { maximumFractionDigits: 2 });
+            const maxBlock = Math.max(...allTransactions.map(t => t.block_height), 0);
+            document.getElementById('latestBlock').textContent = `#${maxBlock}`;
+            document.getElementById('blockHeight').textContent = maxBlock;
+            document.getElementById('validators').textContent = "5";
+        }
+
+        function populateBlockFilter() {
+            const select = document.getElementById('filterBlock');
+            const blocks = [...new Set(allTransactions.map(t => t.block_height))].sort((a, b) => b - a);
+            select.innerHTML = '<option value="">Semua Blok</option>' + 
+                blocks.map(b => `<option value="${b}">Blok #${b}</option>`).join('');
+        }
+
+        function showTransactionDetail(tx) {
+            const modal = document.getElementById('txModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-vqi-muted text-xs uppercase tracking-wider">Hash Transaksi</label>
+                        <p class="font-mono text-sm mt-1 break-all">${tx.tx_hash}</p>
+                    </div>
+                    <div>
+                        <label class="text-vqi-muted text-xs uppercase tracking-wider">Nomor Blok</label>
+                        <p class="font-mono text-sm mt-1 text-vqi-accent">#${tx.block_height}</p>
+                    </div>
+                    <div>
+                        <label class="text-vqi-muted text-xs uppercase tracking-wider">Dari (Alamat Pengirim)</label>
+                        <p class="font-mono text-sm mt-1 break-all">${tx.from_address}</p>
+                    </div>
+                    <div>
+                        <label class="text-vqi-muted text-xs uppercase tracking-wider">Ke (Alamat Penerima)</label>
+                        <p class="font-mono text-sm mt-1 break-all">${tx.to_address}</p>
+                    </div>
+                    <div class="pt-3 border-t border-gray-700/50">
+                        <label class="text-vqi-muted text-xs uppercase tracking-wider">Jumlah</label>
+                        <p class="text-xl font-bold text-vqi-secondary mt-1">
+                            ${parseFloat(tx.amount).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
+                            <span class="text-sm font-normal text-vqi-muted">VQI</span>
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function initDashboard(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('dashboardUser').textContent = user.name;
+            allTransactions = generateMockData(50);
+            filteredTxs = [...allTransactions];
+            updateStats();
+            populateBlockFilter();
+            renderTable();
+        }
+
+        // =====================
+        // EVENT LISTENERS
+        // =====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cek sesi login
+            const session = getSession();
+            if (session) {
+                initDashboard(session);
+                showPage('dashboard');
+            }
+
+            // Navigasi antar halaman
+            document.getElementById('linkToSignup').addEventListener('click', e => { e.preventDefault(); showPage('signup'); });
+            document.getElementById('linkToLoginFromSignup').addEventListener('click', e => { e.preventDefault(); showPage('login'); });
+            document.getElementById('linkToReset').addEventListener('click', e => { e.preventDefault(); showPage('reset'); });
+            document.getElementById('linkToLoginFromReset').addEventListener('click', e => { e.preventDefault(); showPage('login'); });
+            document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); logout(); });
+
+            // Toggle tampilkan kata sandi
+            document.getElementById('toggleLoginPass').addEventListener('click', () => togglePassword('loginPassword', 'toggleLoginPass'));
+            document.getElementById('toggleSignupPass').addEventListener('click', () => togglePassword('signupPassword', 'toggleSignupPass'));
+
+            // Kekuatan kata sandi
+            document.getElementById('signupPassword').addEventListener('input', e => updatePassStrength(e.target.value));
+
+            // Form Login
+            document.getElementById('loginForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const result = verifyUser(email, password);
+                
+                if (result.success) {
+                    initDashboard(result.user);
+                    showPage('dashboard');
+                } else {
+                    const err = document.getElementById('loginError');
+                    err.textContent = result.message;
+                    err.classList.remove('hidden');
+                }
+            });
+
+            // Form Signup
+            document.getElementById('signupForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirm = document.getElementById('signupConfirm').value;
+                
+                const err = document.getElementById('signupError');
+                err.classList.add('hidden');
+
+                if (password.length < 8) {
+                    err.textContent = 'Kata sandi minimal 8 karakter!';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                if (password !== confirm) {
+                    err.textContent = 'Konfirmasi kata sandi tidak cocok!';
+                    err.classList.remove('hidden');
+                    return;
+                }
+
+                const result = saveUser(name, email, password);
+                if (result.success) {
+                    alert('✅ Pendaftaran berhasil! Silakan masuk.');
+                    showPage('login');
+                    document.getElementById('signupForm').reset();
+                } else {
+                    err.textContent = result.message;
+                    err.classList.remove('hidden');
+                }
+            });
+
+            // Form Reset Password
+            document.getElementById('resetForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const email = document.getElementById('resetEmail').value;
+                const msg = document.getElementById('resetMessage');
+                msg.classList.remove('hidden');
+                msg.innerHTML = `<span class="text-vqi-secondary">✅ Tautan reset telah dikirim ke <strong>${email}</strong>. Silakan cek email Anda.</span>`;
+                msg.classList.remove('text-vqi-danger');
+                msg.classList.add('text-vqi-secondary');
+            });
+
+            // Dashboard: Tabel & Pencarian
+            document.getElementById('txTableBody').addEventListener('click', (e) => {
+                const row = e.target.closest('tr[data-tx]');
+                if (row) {
+                    const tx = JSON.parse(row.getAttribute('data-tx'));
+                    showTransactionDetail(tx);
+                }
+            });
+
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('txModal').classList.add('hidden');
+                document.getElementById('txModal').classList.remove('flex');
+            });
+            document.getElementById('txModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('txModal')) {
+                    document.getElementById('txModal').classList.add('hidden');
+                    document.getElementById('txModal').classList.remove('flex');
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                const blockFilter = document.getElementById('filterBlock').value;
+                
+                filteredTxs = allTransactions.filter(tx => {
+                    const matchSearch = !q || 
+                        tx.tx_hash.toLowerCase().includes(q) ||
+                        tx.from_address.toLowerCase().includes(q) ||
+                        tx.to_address.toLowerCase().includes(q);
+                    const matchBlock = !blockFilter || tx.block_height === parseInt(blockFilter);
+                    return matchSearch && matchBlock;
+                });
+                currentPage = 1;
+                renderTable();
+            });
+
+            document.getElementById('filterBlock').addEventListener('change', (e) => {
+                document.getElementById('searchInput').dispatchEvent(new Event('input'));
+            });
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) { currentPage--; renderTable(); }
+            });
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredTxs.length / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) { currentPage++; renderTable(); }
+            });
+
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                allTransactions = generateMockData(50);
+                filteredTxs = [...allTransactions];
+                document.getElementById('searchInput').value = '';
+                document.getElementById('filterBlock').value = '';
+                currentPage = 1;
+                updateStats();
+                populateBlockFilter();
+                renderTable();
+            });
+        });
+    </script>
+</body>
+</html>
